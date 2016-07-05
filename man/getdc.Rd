@@ -33,7 +33,7 @@ van Hooff, J. A. R. A. M., & Wensing, J. A. B. (1987). Dominance and its behavio
 David Leiva \email{dleivaur@ub.edu}.
 }
 
-\seealso{ \code{\link{getphi}},\code{\link{reciptest}}
+\seealso{ \code{\link{getphi}},\code{\link{reciptest1}}
 } 
 
 \examples{
