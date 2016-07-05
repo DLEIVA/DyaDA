@@ -112,9 +112,9 @@ getsignificant <- function(X,alfa=0.05, relfreq=TRUE){
 }
 
 plot.sigdyads <- function(x){
-  library(cowplot)
-  library(reshape2)
-  library(ggplot2)
+  #library(cowplot)
+  #library(reshape2)
+  #library(ggplot2)
   X <- x$original.mat
   pvals <- mapply(x=X[row(X)!=col(X) & X+t(X)!=0 & !is.na(X+t(X))],
                   n=(X+t(X))[row(X)!=col(X) & X+t(X)!=0 & !is.na(X+t(X))],
