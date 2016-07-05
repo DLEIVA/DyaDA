@@ -34,7 +34,7 @@ Solanas, A., Salafranca, Ll., Riba, C., Sierra, V., & Leiva, D. (2006). Quantify
 David Leiva \email{dleivaur@ub.edu}.
 }
 
-\seealso{ \code{\link{getlambda}},\code{\link{getratiolambda}},\code{\link{reciptest}}
+\seealso{ \code{\link{getlambda}},\code{\link{getratiolambda}},\code{\link{reciptest1}}
 } 
 
 \examples{
