@@ -168,6 +168,7 @@ void linearh(double *X, int *nrow, int *rep, double *pvhright, double *pvhleft)
   /* Allocate in memory size of original matrix */
   
   mat_X = malloc(maxrow*maxcol*sizeof(double));
+  
   if (mat_X == NULL)
   {
     error("Null dimension");
@@ -237,9 +238,9 @@ void linearh(double *X, int *nrow, int *rep, double *pvhright, double *pvhleft)
       hsim = getlandau(matgen,&maxrow,&maxcol);
     
     epsilon = fabs(hsim - h);
-    if ( (hsim > h) && (epsilon > 0.000001) ) 
+    if ( (hsim > h) & (epsilon > 0.000001) ) 
     {*pvhright += 1.;}
-    if ( (hsim < h) && (epsilon > 0.000001) ) 
+    if ( (hsim < h) & (epsilon > 0.000001) ) 
     {*pvhleft += 1.;}
     
     if ((hsim == h) | (epsilon <= 0.000001))
