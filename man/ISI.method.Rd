@@ -5,7 +5,7 @@
 \title{I&SI method in R}
 
 \description{
-An R implementation of the I&SI algorithm for obtaining an }
+An R implementation of the I&SI algorithm for obtaining a rank order according to a linear hierarchy. }
 
 \usage{
    ISI.method(X,names=NULL,tries=100)
