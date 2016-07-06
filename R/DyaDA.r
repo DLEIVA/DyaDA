@@ -93,7 +93,7 @@ gettwowayrel <- function (X, relfreq=TRUE){
   else return(twowayrel)
 }
 
-getsignificant <- function(X,alfa=0.05, relfreq=TRUE){
+getsignificant <- function(X,alpha=0.05, relfreq=TRUE){
   dyad <- nrow(X)*(nrow(X)-1)/2;
   pvals <- mapply(x=X[row(X)!=col(X) & X+t(X)!=0 & !is.na(X+t(X))],
                   n=(X+t(X))[row(X)!=col(X) & X+t(X)!=0& !is.na(X+t(X))],
@@ -102,7 +102,7 @@ getsignificant <- function(X,alfa=0.05, relfreq=TRUE){
   binommat[row(X)!=col(X) & X+t(X)!=0 & !is.na(X+t(X))]<-round(pvals,3)
   diag(binommat) <- 0
   binommat[upper.tri(binommat)] <- (X+t(X))[upper.tri(X)]
-  ndyads <- sum(binommat[lower.tri(binommat)]<=alfa,na.rm=TRUE)
+  ndyads <- sum(binommat[lower.tri(binommat)]<=alpha,na.rm=TRUE)
   if (!is.null(dimnames(X))) dimnames(binommat) <- dimnames(X)
   if (relfreq == TRUE) res<-list(original.mat=X,binomtest.matrix=binommat,significant.dyads=ndyads,
                             perc.significant.dyads=(ndyads/dyad*100))
