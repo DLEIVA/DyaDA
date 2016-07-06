@@ -1,6 +1,6 @@
-\name{gettied}
+\name{getsignificant}
 
-\alias{gettied}
+\alias{getsignificant}
 
 \title{Dyads with significant relationships}
 
@@ -8,12 +8,12 @@
 Function to obtain the number of significant relationships of the observed sociomatrix.}
 
 \usage{
-   getsignificant(X,alfa=0.05,relfreq=TRUE)
+   getsignificant(X,alpha=0.05,relfreq=TRUE)
 }
 
 \arguments{
   \item{X}{Original sociomatrix.}
-  \item{alfa}{Significance level for the binomial test.}
+  \item{alpha}{Significance level for the binomial test.}
   \item{relfreq}{Logical. If TRUE the function computes percentage of significant relationships.}
 
 }
