@@ -127,135 +127,135 @@
 /* Set of functions to generate random sociomatrices under the null hypothesis and compute Landau's h statistics */
 
 /* Function to compute Landau's linear hierarchy index */
-	
-   double getlandau(double *mat_V, int *maxrow, int *maxcol)
-   {
-   int i, j;
-   double *Vvector,term,sumabil,h;
-   
-   /* Allocate in memory size of vector Vvector */
-   
-   Vvector = calloc(*maxrow, sizeof(double));   
-   
-   for (i= 0; i< *maxrow; i++)
-     Vvector[i] = 0.;
-   for (i= 0; i< *maxrow; i++)
-     for (j= 0; j< *maxcol; j++)
-       Vvector[i] += mat_V[i**maxcol+j];
-   
-   sumabil = 0.;
-   for (j= 0; j< *maxcol; j++){
-   term = Vvector[j] - ((*maxrow) - 1.)/2.;
-   sumabil += pow(term,2);
-   }
-   h = 12./(pow(*maxrow,3)-(*maxrow))*sumabil;
-  
-   /* Deallocate the matrices and vectors used in the routine */
-  
-   free(Vvector);   
-   
-   return(h);
-   }
 
-  void linearh(double *X, int *nrow, int *rep, double *pvhright, double *pvhleft)
-  {
+double getlandau(double *mat_V, int *maxrow, int *maxcol)
+{
+  int i, j;
+  double *Vvector,term,sumabil,h;
+  
+  /* Allocate in memory size of vector Vvector */
+  
+  Vvector = calloc(*maxrow, sizeof(double));   
+  
+  for (i= 0; i< *maxrow; i++)
+    Vvector[i] = 0.;
+  for (i= 0; i< *maxrow; i++)
+    for (j= 0; j< *maxcol; j++)
+      Vvector[i] += mat_V[i**maxcol+j];
+  
+  sumabil = 0.;
+  for (j= 0; j< *maxcol; j++){
+    term = Vvector[j] - ((*maxrow) - 1.)/2.;
+    sumabil += pow(term,2);
+  }
+  h = 12./(pow(*maxrow,3)-(*maxrow))*sumabil;
+  
+  /* Deallocate the matrices and vectors used in the routine */
+  
+  free(Vvector);   
+  
+  return(h);
+}
+
+void linearh(double *X, int *nrow, int *rep, double *pvhright, double *pvhleft)
+{
   int i, j, m, maxrow, maxcol, iter;
   double *mat_X, *mat_V, numb, *matgen, h, hsim, epsilon;
-
-   GetRNGstate();
-   maxrow = maxcol = *nrow;
-
-/* Allocate in memory size of original matrix */
-
-   mat_X = malloc(maxrow*maxcol*sizeof(double));
-   if (mat_X == NULL)
-   {
-     error("Null dimension");
-   }
-
-   m = 0.;
-   for (i= 0; i< maxrow; i++)
-      for (j= 0; j< maxcol; j++)
-      {   
-         mat_X[i*maxcol+j] = X[m];
-         m++;
-      }
-
-/* Allocate in memory size of matrix of abilities */
-
-   mat_V = malloc(maxrow*maxcol*sizeof(double));
-
-   for (i= 0; i< (maxrow-1); i++)
-      for (j= (i+1); j< maxcol; j++)
+  
+  GetRNGstate();
+  maxrow = maxcol = *nrow;
+  
+  /* Allocate in memory size of original matrix */
+  
+  mat_X = malloc(maxrow*maxcol*sizeof(double));
+  if (mat_X == NULL)
+  {
+    error("Null dimension");
+  }
+  
+  m = 0.;
+  for (i= 0; i< maxrow; i++)
+    for (j= 0; j< maxcol; j++)
+    {   
+      mat_X[i*maxcol+j] = X[m];
+      m++;
+    }
+    
+    /* Allocate in memory size of matrix of abilities */
+    
+    mat_V = malloc(maxrow*maxcol*sizeof(double));
+  
+  for (i= 0; i< (maxrow-1); i++)
+    for (j= (i+1); j< maxcol; j++)
+    {
+      if (X[i*maxcol+j] > X[j*maxcol+i])
       {
-           if (X[i*maxcol+j] > X[j*maxcol+i])
-	   {
-             mat_V[i*maxcol+j] = 1.;
-             mat_V[j*maxcol+i] = 0.;
-	   }
-           if (X[i*maxcol+j] < X[j*maxcol+i])
-	   {
-             mat_V[j*maxcol+i] = 1.;
-             mat_V[i*maxcol+j] = 0.;
-	   }
-           if ((X[i*maxcol+j] == X[j*maxcol+i]) & (X[i*maxcol+j] != 0.))
-	   {
-             mat_V[i*maxcol+j] = 1./2.;
-             mat_V[j*maxcol+i] = 1./2.;
-	   }
-	   if ((X[i*maxcol+j] == X[j*maxcol+i]) & (X[i*maxcol+j] == 0.))
-	   {
-	     numb = runif(0,1);
-             if (numb >= 0.5)
-	       mat_V[i*maxcol+j] = 1.;
-	       else X[i*maxcol+j] = 0.;
-                  mat_V[j*maxcol+i] = 1-X[i*maxcol+j];
-           }
+        mat_V[i*maxcol+j] = 1.;
+        mat_V[j*maxcol+i] = 0.;
       }
-
-   /* Compute linear hierarchy measure for the original sociomatrix */
-
-   h = getlandau(mat_V,&maxrow,&maxcol);
-
-   matgen = malloc(maxrow*maxcol*sizeof(double));
-
-   *pvhright = 0.;
-   *pvhleft = 0.;
-
-   for (iter= 0; iter< *rep; iter++) 
-   {
-      for (i= 0; i< maxrow; i++)
-         for (j= 0; j< maxcol; j++)
-         {  if (i < j){
-	      numb = runif(0,1);   
-              if (numb >= 0.5){matgen[i*maxcol+j]=1;}
-	        else matgen[i*maxcol+j]=0;
-              matgen[j*maxcol+i]=1-matgen[i*maxcol+j];}
-            if (i == j){matgen[i*maxcol+j]=0.;}
-         }
- 
-   hsim = getlandau(matgen,&maxrow,&maxcol);
-
-   epsilon = fabs(hsim - h);
-         if ( (hsim > h) && (epsilon > 0.000001) ) 
-           {*pvhright += 1.;}
-         if ( (hsim < h) && (epsilon > 0.000001) ) 
-           {*pvhleft += 1.;}
-
-	 if ((hsim == h) | (epsilon <= 0.000001))
-           {*pvhright += 1.;
-	    *pvhleft += 1.;}
-   }
-   
-   /* Compute p values for the linear hierarchy index under the specified null hypothesis */
-
-   *pvhright = (*pvhright+1.)/(*rep+1.);
-   *pvhleft =(*pvhleft+1.)/(*rep+1.);
-
-   PutRNGstate();
-   free(matgen);
-   free(mat_V);
-   free(mat_X);
+      if (X[i*maxcol+j] < X[j*maxcol+i])
+      {
+        mat_V[j*maxcol+i] = 1.;
+        mat_V[i*maxcol+j] = 0.;
+      }
+      if ((X[i*maxcol+j] == X[j*maxcol+i]) & (X[i*maxcol+j] != 0.))
+      {
+        mat_V[i*maxcol+j] = 1./2.;
+        mat_V[j*maxcol+i] = 1./2.;
+      }
+      if ((X[i*maxcol+j] == X[j*maxcol+i]) & (X[i*maxcol+j] == 0.))
+      {
+        numb = runif(0,1);
+        if (numb >= 0.5)
+          mat_V[i*maxcol+j] = 1.;
+        else X[i*maxcol+j] = 0.;
+        mat_V[j*maxcol+i] = 1-X[i*maxcol+j];
+      }
+    }
+    
+    /* Compute linear hierarchy measure for the original sociomatrix */
+    
+    h = getlandau(mat_V,&maxrow,&maxcol);
+  
+  matgen = malloc(maxrow*maxcol*sizeof(double));
+  
+  *pvhright = 0.;
+  *pvhleft = 0.;
+  
+  for (iter= 0; iter< *rep; iter++) 
+  {
+    for (i= 0; i< maxrow; i++)
+      for (j= 0; j< maxcol; j++)
+        {  if (i < j){
+          numb = runif(0,1);   
+          if (numb >= 0.5){matgen[i*maxcol+j]=1;}
+          else matgen[i*maxcol+j]=0;
+          matgen[j*maxcol+i]=1-matgen[i*maxcol+j];}
+        if (i == j){matgen[i*maxcol+j]=0.;}
+        }
+      
+      hsim = getlandau(matgen,&maxrow,&maxcol);
+    
+    epsilon = fabs(hsim - h);
+    if ( (hsim > h) && (epsilon > 0.000001) ) 
+    {*pvhright += 1.;}
+    if ( (hsim < h) && (epsilon > 0.000001) ) 
+    {*pvhleft += 1.;}
+    
+    if ((hsim == h) | (epsilon <= 0.000001))
+    {*pvhright += 1.;
+      *pvhleft += 1.;}
+  }
+  
+  /* Compute p values for the linear hierarchy index under the specified null hypothesis */
+  
+  *pvhright = (*pvhright+1.)/(*rep+1.);
+  *pvhleft =(*pvhleft+1.)/(*rep+1.);
+  
+  PutRNGstate();
+  free(matgen);
+  free(mat_V);
+  free(mat_X);
 }
 
 
